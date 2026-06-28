@@ -21,7 +21,7 @@ export const redis = new Redis(process.env.REDIS_URL);
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.status(200).json("Hello from redis kaise hai aaplog");
+  res.status(200).json(`Hello from ${process.env.SERVER_NAME}`);
 });
 
 /* ----------------------------------------------
