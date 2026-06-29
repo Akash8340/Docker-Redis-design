@@ -1,0 +1,48 @@
+services:
+  nginx:
+    image: nginx
+    ports:
+      - 8080:80
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+  
+  # horizontal scaling by creating two gateways(server)
+  gateway1:
+    build: ./backend/gateways
+    env_file:
+      - ./backend/gateways/.env
+    environment:
+      - SERVER_NAME=GATEWAY-1
+    ports:
+      - 8001:8000
+
+  gateway2:
+    build: ./backend/gateways
+    env_file:
+      - ./backend/gateways/.env
+    environment:
+      - SERVER_NAME=GATEWAY-2
+    ports:
+      - 8002:8000
+  
+  # all three microservices 
+  auth-service:
+    build: ./backend/services/auth
+    env_file:
+      - ./backend/services/auth/.env
+    ports:
+      - 5001:8001
+
+  order-service:
+    build: ./backend/services/order
+    env_file:
+      - ./backend/services/order/.env
+    ports:
+      - 5002:8002
+
+  product-service:
+    build: ./backend/services/product
+    env_file:
+      - ./backend/services/product/.env
+    ports:
+      - 5003:8003
